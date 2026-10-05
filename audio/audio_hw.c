@@ -1554,10 +1554,11 @@ static int do_init_in_common(struct stream_in_common *in,
     in->stream.get_input_frames_lost = in_get_input_frames_lost;
     in->stream.get_capture_position = in_get_capture_position;
 
-    /* Init requested stream config */
-    in->format = config->format;
+    /* Init requested stream config; the policy may probe with defaults */
+    in->format = config->format ? config->format : AUDIO_FORMAT_PCM_16_BIT;
     in->sample_rate = config->sample_rate;
-    in->channel_mask = config->channel_mask;
+    in->channel_mask = config->channel_mask ? config->channel_mask
+                                            : IN_CHANNEL_MASK_DEFAULT;
     in->channel_count = audio_channel_count_from_in_mask(in->channel_mask);
 
 #ifdef AUDIO_DEVICE_API_VERSION_3_0
